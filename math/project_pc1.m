@@ -24,15 +24,13 @@ dflts = {1, ...
 args = parse_args(pnames, dflts, varargin{:});
 
 if isstr(ds)
-  lms = prefs.lms; %% parse_grp('/cmap/data/vdb/spaces/lm_epsilon_n978.grp');
+  lms = parse_grp('/cmap/data/vdb/spaces/lm_epsilon_n978.grp');
   ds = parse_gctx(ds, 'rid', lms);
 end
 
 
 if args.use_ref
-  refds = get_data(prefs, 'refpc', 'rid', ds.rid, 'cid', {'affogato_pc001'}); 
-      %%parse_gctx('/cmap/data/vdb/princomp/affogato_pcs_global_n978x978.gctx', ...
-      %%'rid', ds.rid, 'cid', {'affogato_pc001'});
+  refds = parse_gctx('/cmap/data/vdb/princomp/affogato_pcs_global_n978x978.gctx', 'rid', ds.rid, 'cid', {'affogato_pc001'});
   
   mumat = mean(ds.mat,2);
   mymat = ds.mat - repmat(mumat, 1, size(ds.mat,2));
@@ -43,9 +41,7 @@ if args.use_ref
   mymat = mymat - refds.mat * (refds.mat' * mymat);
   
   if args.globmean
-    refmean = get_data(prefs, 'refmean', 'rid', ds.rid, 'cid', {'Affogato Mean'});
-      %%parse_gctx('/cmap/data/vdb/princomp/affogato_means_global_n3x978.gctx', ...
-      %%'rid', ds.rid, 'cid', {'Affogato Mean'});
+    refmean = parse_gctx('/cmap/data/vdb/princomp/affogato_means_global_n3x978.gctx','rid', ds.rid, 'cid', {'Affogato Mean'});
     ds.mat = mymat + repmat(mumat - refmean.mat, 1, size(ds.mat, 2));
   elseif args.zeromean
     ds.mat = mymat;
